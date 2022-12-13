@@ -15,8 +15,7 @@ func main() {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(helmet.Default())
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
-	//r.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".pdf", ".mp4"})))
+	r.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".pdf", ".mp4"})))
 
 	db, err := database.Connection()
 	if err != nil {
