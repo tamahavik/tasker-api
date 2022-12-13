@@ -1,10 +1,9 @@
 package services
 
 import (
-	"github.com/google/uuid"
 	"github.com/tamahavik/tasker-api/pkg/models"
 	"github.com/tamahavik/tasker-api/pkg/repository"
-	"time"
+	"github.com/tamahavik/tasker-api/pkg/utils"
 )
 
 type UserServiceImpl struct {
@@ -16,8 +15,11 @@ func NewUserService(userRepository repository.UserRepository) *UserServiceImpl {
 }
 
 func (userService UserServiceImpl) Create(user models.User) models.User {
-	user.Id = uuid.New().String()
-	user.CreatedAt = time.Now()
+	hash, err := utils.HashPassword(user.Password)
+	if err != nil {
+		panic(err)
+	}
+	user.Password = hash
 	createdUser := userService.UserRepository.Save(user)
 	return createdUser
 }

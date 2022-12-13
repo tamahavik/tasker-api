@@ -35,6 +35,12 @@ func Connection() (*gorm.DB, error) {
 	db, err2 := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqlDriver,
 	}), &gorm.Config{})
+
+	err := db.AutoMigrate()
+	if err != nil {
+		return nil, err
+	}
+
 	if err2 != nil {
 		return nil, err2
 	}

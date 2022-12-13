@@ -22,12 +22,17 @@ func main() {
 	userService := services.NewUserService(userRepository)
 	userController := controllers.NewUserController(userService)
 
+	authRepository := repository.NewAuthenticationRepository(db)
+	authService := services.NewAuthenticationService(authRepository)
+	authController := controllers.NewAuthentication(authService)
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
+	r.GET("/auth/login", authController.Login)
 	r.POST("/users", userController.Create)
 
 	r.GET("/users", userController.FindAll)

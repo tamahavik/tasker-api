@@ -6,9 +6,11 @@ Content-Type: application/json
   "username": "some_username",
   "email": "some_email@gmail.com",
   "password": "somepassword",
-  "name": "somenamehere",
-  "age": 30
+  "name": "somenamehere"
 }
+
+###
+GET http://localhost:8000/auth/login?auth=some_username&password=somepasswor
 
 ###
 GET http://localhost:8000/users
