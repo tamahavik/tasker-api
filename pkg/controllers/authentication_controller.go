@@ -7,29 +7,29 @@ import (
 )
 
 type AuthenticationController interface {
-	Login(c *gin.Context)
+	Login(ctx *gin.Context)
 }
 
 type authenticationControllerImpl struct {
 	service services.AuthenticationService
 }
 
-func NewAuthentication(service services.AuthenticationService) *authenticationControllerImpl {
-	return &authenticationControllerImpl{service: service}
+func NewAuthentication(s services.AuthenticationService) *authenticationControllerImpl {
+	return &authenticationControllerImpl{service: s}
 }
 
-func (a *authenticationControllerImpl) Login(c *gin.Context) {
-	auth := c.Query("auth")
-	password := c.Query("password")
+func (a *authenticationControllerImpl) Login(ctx *gin.Context) {
+	auth := ctx.Query("auth")
+	password := ctx.Query("password")
 	err := a.service.Login(auth, password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"status":  401,
 			"message": err.Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "success",
 	})

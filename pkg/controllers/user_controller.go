@@ -8,36 +8,36 @@ import (
 )
 
 type UserController interface {
-	Create(c *gin.Context)
-	FindAll(c *gin.Context)
+	Create(ctx *gin.Context)
+	FindAll(ctx *gin.Context)
 }
 
 type userControllerImpl struct {
-	services.UserService
+	service services.UserService
 }
 
-func NewUserController(userService services.UserService) *userControllerImpl {
+func NewUserController(s services.UserService) *userControllerImpl {
 	return &userControllerImpl{
-		UserService: userService,
+		service: s,
 	}
 }
 
-func (controller userControllerImpl) Create(c *gin.Context) {
+func (c userControllerImpl) Create(ctx *gin.Context) {
 	var user models.User
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := ctx.ShouldBindJSON(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	createdUser := controller.UserService.Create(user)
-	c.JSON(http.StatusOK, gin.H{
+	createdUser := c.service.Create(user)
+	ctx.JSON(http.StatusOK, gin.H{
 		"status": "OK",
 		"data":   createdUser,
 	})
 }
 
-func (controller userControllerImpl) FindAll(c *gin.Context) {
-	users := controller.UserService.FindAll()
-	c.JSON(http.StatusOK, gin.H{
+func (c userControllerImpl) FindAll(ctx *gin.Context) {
+	users := c.service.FindAll()
+	ctx.JSON(http.StatusOK, gin.H{
 		"status": "OK",
 		"data":   users,
 	})

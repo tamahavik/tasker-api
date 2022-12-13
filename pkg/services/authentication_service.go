@@ -12,15 +12,15 @@ type AuthenticationService interface {
 }
 
 type authenticationServiceImpl struct {
-	Repository repository.AuthenticationRepository
+	repository repository.AuthenticationRepository
 }
 
 func NewAuthenticationService(authenticationRepository repository.AuthenticationRepository) *authenticationServiceImpl {
-	return &authenticationServiceImpl{Repository: authenticationRepository}
+	return &authenticationServiceImpl{repository: authenticationRepository}
 }
 
 func (a *authenticationServiceImpl) Login(auth string, password string) error {
-	user := a.Repository.Login(auth)
+	user := a.repository.Login(auth)
 	if user.ID == 0 {
 		return errors.New("credentials not valid")
 	}

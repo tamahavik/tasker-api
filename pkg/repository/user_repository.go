@@ -13,32 +13,32 @@ type UserRepository interface {
 	FindAll() []models.User
 }
 
-type UserRepositoryImpl struct {
-	DB *gorm.DB
+type userRepositoryImpl struct {
+	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) *UserRepositoryImpl {
-	return &UserRepositoryImpl{
-		DB: db,
+func NewUserRepository(db *gorm.DB) *userRepositoryImpl {
+	return &userRepositoryImpl{
+		db: db,
 	}
 }
 
-func (repository *UserRepositoryImpl) Save(user models.User) models.User {
-	repository.DB.Create(&user)
+func (repository *userRepositoryImpl) Save(user models.User) models.User {
+	repository.db.Create(&user)
 	return user
 }
 
-func (repository *UserRepositoryImpl) Update(user models.User) models.User {
+func (repository *userRepositoryImpl) Update(user models.User) models.User {
 	panic("Implement me")
 }
-func (repository *UserRepositoryImpl) Delete(id string) {
+func (repository *userRepositoryImpl) Delete(id string) {
 	panic("Implement me")
 }
-func (repository *UserRepositoryImpl) FindById(id string) models.User {
+func (repository *userRepositoryImpl) FindById(id string) models.User {
 	panic("Implement me")
 }
-func (repository *UserRepositoryImpl) FindAll() []models.User {
+func (repository *userRepositoryImpl) FindAll() []models.User {
 	var users []models.User
-	repository.DB.Find(&users)
+	repository.db.Find(&users)
 	return users
 }

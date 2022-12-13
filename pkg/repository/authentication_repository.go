@@ -10,15 +10,15 @@ type AuthenticationRepository interface {
 }
 
 type authenticationRepositoryImpl struct {
-	*gorm.DB
+	db *gorm.DB
 }
 
 func NewAuthenticationRepository(db *gorm.DB) *authenticationRepositoryImpl {
-	return &authenticationRepositoryImpl{DB: db}
+	return &authenticationRepositoryImpl{db: db}
 }
 
 func (a *authenticationRepositoryImpl) Login(auth string) models.User {
 	var user models.User
-	a.DB.Where("username = ? OR email = ?", auth, auth).Find(&user)
+	a.db.Where("username = ? OR email = ?", auth, auth).Find(&user)
 	return user
 }

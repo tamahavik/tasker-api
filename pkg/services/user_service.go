@@ -14,39 +14,39 @@ type UserService interface {
 	FindAll() []models.User
 }
 
-type UserServiceImpl struct {
-	UserRepository repository.UserRepository
+type userServiceImpl struct {
+	repository repository.UserRepository
 }
 
-func NewUserService(userRepository repository.UserRepository) *UserServiceImpl {
-	return &UserServiceImpl{UserRepository: userRepository}
+func NewUserService(userRepository repository.UserRepository) *userServiceImpl {
+	return &userServiceImpl{repository: userRepository}
 }
 
-func (userService UserServiceImpl) Create(user models.User) models.User {
+func (userService userServiceImpl) Create(user models.User) models.User {
 	hash, err := utils.HashPassword(user.Password)
 	if err != nil {
 		panic(err)
 	}
 	user.Password = hash
-	createdUser := userService.UserRepository.Save(user)
+	createdUser := userService.repository.Save(user)
 	return createdUser
 }
 
-func (userService UserServiceImpl) Update() {
+func (userService userServiceImpl) Update() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (userService UserServiceImpl) Delete() {
+func (userService userServiceImpl) Delete() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (userService UserServiceImpl) FindById() {
+func (userService userServiceImpl) FindById() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (userService UserServiceImpl) FindAll() []models.User {
-	return userService.UserRepository.FindAll()
+func (userService userServiceImpl) FindAll() []models.User {
+	return userService.repository.FindAll()
 }
