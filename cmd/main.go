@@ -1,6 +1,8 @@
 package main
 
 import (
+	helmet "github.com/danielkov/gin-helmet"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/tamahavik/tasker-api/pkg/controllers"
 	"github.com/tamahavik/tasker-api/pkg/database"
@@ -12,6 +14,9 @@ import (
 func main() {
 	r := gin.New()
 	r.Use(gin.Logger())
+	r.Use(helmet.Default())
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
+	//r.Use(gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedExtensions([]string{".pdf", ".mp4"})))
 
 	db, err := database.Connection()
 	if err != nil {

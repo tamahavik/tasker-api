@@ -10,7 +10,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8000/auth/login?auth=some_username&password=somepasswor
+GET http://localhost:8000/auth/login?auth=some_username&password=somepassword
 
 ###
 GET http://localhost:8000/users
