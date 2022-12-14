@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tamahavik/tasker-api/pkg/dto"
 	"github.com/tamahavik/tasker-api/pkg/models"
 	"github.com/tamahavik/tasker-api/pkg/services"
+	"github.com/tamahavik/tasker-api/pkg/utils"
 	"net/http"
 )
 
@@ -16,29 +18,31 @@ type userControllerImpl struct {
 	service services.UserService
 }
 
-func NewUserController(s services.UserService) *userControllerImpl {
+func NewUserController(s services.UserService) UserController {
 	return &userControllerImpl{
 		service: s,
 	}
 }
 
 func (c userControllerImpl) Create(ctx *gin.Context) {
-	var user models.User
-	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	var d dto.CreateUserRequest
+	if err := ctx.ShouldBindJSON(&d); err != nil {
+		utils.ResponseError(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	user := models.User{
+		Username: d.Username,
+		Email:    d.Email,
+		Password: d.Email,
+		Name:     d.Name,
+	}
+
 	createdUser := c.service.Create(user)
-	ctx.JSON(http.StatusOK, gin.H{
-		"status": "OK",
-		"data":   createdUser,
-	})
+	utils.ResponseSuccess(ctx, http.StatusOK, createdUser)
 }
 
 func (c userControllerImpl) FindAll(ctx *gin.Context) {
 	users := c.service.FindAll()
-	ctx.JSON(http.StatusOK, gin.H{
-		"status": "OK",
-		"data":   users,
-	})
+	utils.ResponseSuccess(ctx, http.StatusOK, users)
 }

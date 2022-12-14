@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"github.com/tamahavik/tasker-api/pkg/repository"
 	"github.com/tamahavik/tasker-api/pkg/utils"
 )
@@ -15,7 +14,7 @@ type authenticationServiceImpl struct {
 	repository repository.AuthenticationRepository
 }
 
-func NewAuthenticationService(authenticationRepository repository.AuthenticationRepository) *authenticationServiceImpl {
+func NewAuthenticationService(authenticationRepository repository.AuthenticationRepository) AuthenticationService {
 	return &authenticationServiceImpl{repository: authenticationRepository}
 }
 
@@ -24,8 +23,6 @@ func (a *authenticationServiceImpl) Login(auth string, password string) error {
 	if user.ID == 0 {
 		return errors.New("credentials not valid")
 	}
-
-	fmt.Println(utils.ComparePassword(user.Password, password))
 	if !utils.ComparePassword(password, user.Password) {
 		return errors.New("credentials not valid")
 	}

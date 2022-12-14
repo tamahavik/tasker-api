@@ -5,9 +5,10 @@ import (
 )
 
 type User struct {
-	gorm.Model
-	Username string `json:"username" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Name     string `json:"name" binding:"required"`
+	gorm.Model `json:"-"`
+	ID         uint `json:"id" gorm:"primarykey"`
+	Username   string
+	Email      string
+	Password   string `json:"-"`
+	Name       string
 }

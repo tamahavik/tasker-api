@@ -10,7 +10,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func Connection() (*gorm.DB, error) {
+type Connection interface {
+	GetConnection() (*gorm.DB, error)
+}
+
+type ConnectionImpl struct {
+}
+
+func NewConnection() Connection {
+	return &ConnectionImpl{}
+}
+
+func (c ConnectionImpl) GetConnection() (*gorm.DB, error) {
 	//newLogger := logger.New(
 	//	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 	//	logger.Config{
@@ -35,11 +46,6 @@ func Connection() (*gorm.DB, error) {
 	db, err2 := gorm.Open(postgres.New(postgres.Config{
 		Conn: sqlDriver,
 	}), &gorm.Config{})
-
-	err := db.AutoMigrate()
-	if err != nil {
-		return nil, err
-	}
 
 	if err2 != nil {
 		return nil, err2
