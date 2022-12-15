@@ -6,15 +6,15 @@ package injection
 import (
 	"github.com/google/wire"
 	"github.com/tamahavik/tasker-api/pkg/controllers"
-	"github.com/tamahavik/tasker-api/pkg/database"
 	"github.com/tamahavik/tasker-api/pkg/repository"
 	"github.com/tamahavik/tasker-api/pkg/services"
+	"github.com/tamahavik/tasker-api/pkg/utils"
 	"gorm.io/gorm"
 )
 
 var (
-	dbProvider  wire.ProviderSet = wire.NewSet(database.NewConnection)
-	provideUser wire.ProviderSet = wire.NewSet(
+	provideConfig wire.ProviderSet = wire.NewSet(utils.NewConfiguration)
+	provideUser   wire.ProviderSet = wire.NewSet(
 		repository.NewUserRepository,
 		services.NewUserService,
 		controllers.NewUserController)
@@ -24,6 +24,11 @@ var (
 		controllers.NewAuthenticationController)
 )
 
+func InstanceConfig() utils.Configuration {
+	wire.Build(provideConfig)
+	return nil
+}
+
 func InstanceUser(db *gorm.DB) controllers.UserController {
 	wire.Build(provideUser)
 	return nil
@@ -31,10 +36,5 @@ func InstanceUser(db *gorm.DB) controllers.UserController {
 
 func InstanceAuthentication(db *gorm.DB) controllers.AuthenticationController {
 	wire.Build(provideAuthentication)
-	return nil
-}
-
-func InstanceDatabase() database.Connection {
-	wire.Build(dbProvider)
 	return nil
 }

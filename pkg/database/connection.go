@@ -1,10 +1,11 @@
 package database
 
 import (
-	"database/sql"
-	"time"
-
+	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
+	"github.com/tamahavik/tasker-api/pkg/models"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -22,34 +23,36 @@ func NewConnection() Connection {
 }
 
 func (c ConnectionImpl) GetConnection() (*gorm.DB, error) {
-	//newLogger := logger.New(
-	//	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
-	//	logger.Config{
-	//		SlowThreshold:             time.Second,   // Slow SQL threshold
-	//		LogLevel:                  logger.Silent, // Log level
-	//		IgnoreRecordNotFoundError: true,          // Ignore ErrRecordNotFound error for logger
-	//		Colorful:                  false,         // Disable color
-	//	},
-	//)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		viper.GetString("DB_HOST"),
+		viper.GetString("DB_USER"),
+		viper.GetString("DB_PASSWORD"),
+		viper.GetString("DB_NAME"),
+		viper.GetString("DB_PORT"),
+		viper.GetString("SSL_MODE"),
+		viper.GetString("TZ"))
 
-	connectionStr := `postgres://postgres:password@localhost:5432/tasker?sslmode=disable`
-	sqlDriver, err1 := sql.Open("postgres", connectionStr)
+	db, err1 := gorm.Open(postgres.New(postgres.Config{DSN: dsn}), &gorm.Config{})
 	if err1 != nil {
 		return nil, err1
 	}
 
-	sqlDriver.SetMaxIdleConns(10)
-	sqlDriver.SetMaxOpenConns(100)
-	sqlDriver.SetConnMaxIdleTime(5 * time.Minute)
-	sqlDriver.SetConnMaxLifetime(60 * time.Minute)
+	fmt.Println(viper.GetString("DB"))
 
-	db, err2 := gorm.Open(postgres.New(postgres.Config{
-		Conn: sqlDriver,
-	}), &gorm.Config{})
-
+	err2 := db.AutoMigrate(&models.User{})
 	if err2 != nil {
 		return nil, err2
 	}
+
+	sqlDriver, err3 := db.DB()
+	if err3 != nil {
+		return nil, err3
+	}
+
+	sqlDriver.SetMaxIdleConns(viper.GetInt("MAX_IDLE_CON"))
+	sqlDriver.SetMaxOpenConns(viper.GetInt("MAX_OPEN_CON"))
+	sqlDriver.SetConnMaxIdleTime(time.Duration(viper.GetInt("CON_MAX_IDLE_TIME")) * time.Minute)
+	sqlDriver.SetConnMaxLifetime(time.Duration(viper.GetInt("CON_MAX_LIFE_TIME")) * time.Minute)
 
 	return db, nil
 

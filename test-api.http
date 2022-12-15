@@ -3,14 +3,14 @@ POST http://localhost:8000/users
 Content-Type: application/json
 
 {
-  "username": "username3",
-  "email": "iusername3@gmail.com",
-  "password": "1234563",
-  "name": "user3"
+  "username": "username5",
+  "email": "iusername5@gmail.com",
+  "password": "qwerty",
+  "name": "user5"
 }
 
 ###
-GET http://localhost:8000/auth/login?auth=some_username&password=somepassword
+GET http://localhost:8000/auth/login?auth=username4&password=1234564
 
 ###
 GET http://localhost:8000/users
