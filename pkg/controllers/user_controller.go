@@ -34,7 +34,7 @@ func (c userControllerImpl) Create(ctx *gin.Context) {
 	user := models.User{
 		Username: d.Username,
 		Email:    d.Email,
-		Password: d.Email,
+		Password: d.Password,
 		Name:     d.Name,
 	}
 

@@ -6,7 +6,8 @@ import (
 )
 
 type AuthenticationRepository interface {
-	Login(auth string) models.User
+	FindByEmailAndUsername(email string, username string) models.User
+	Register(user *models.User) *models.User
 }
 
 type authenticationRepositoryImpl struct {
@@ -17,8 +18,13 @@ func NewAuthenticationRepository(db *gorm.DB) AuthenticationRepository {
 	return &authenticationRepositoryImpl{db: db}
 }
 
-func (a *authenticationRepositoryImpl) Login(auth string) models.User {
+func (a *authenticationRepositoryImpl) FindByEmailAndUsername(email string, username string) models.User {
 	var user models.User
-	a.db.Where("username = ? OR email = ?", auth, auth).Find(&user)
+	a.db.Where("username = ? OR email = ?", username, email).Find(&user)
+	return user
+}
+
+func (a *authenticationRepositoryImpl) Register(user *models.User) *models.User {
+	a.db.Create(user)
 	return user
 }
